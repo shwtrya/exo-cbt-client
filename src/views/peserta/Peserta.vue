@@ -47,6 +47,28 @@
                                 </b-input-group-append>
                               </b-input-group>
                             </b-form-group>
+                            <b-form-group
+                              label="Grup"
+                              label-cols-sm="6"
+                              label-cols-md="4"
+                              label-cols-lg="3"
+                              label-align-sm="right"
+                              label-size="sm"
+                              label-for="groupSelect"
+                            >
+                              <v-select label="name" :reduce="group => group.id" :options="groups" v-model="groupId"></v-select>
+                            </b-form-group>
+                            <b-form-group
+                              label="Jurusan"
+                              label-cols-sm="6"
+                              label-cols-md="4"
+                              label-cols-lg="3"
+                              label-align-sm="right"
+                              label-size="sm"
+                              label-for="jurusanSelect"
+                            >
+                              <v-select label="nama" :reduce="jurusan => jurusan.id" :options="all_jurusan" v-model="jurusanId"></v-select>
+                            </b-form-group>
                     		<b-form-group
                               label="Per page"
                               label-cols-sm="6"
@@ -179,12 +201,18 @@
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { successToas, errorToas} from '@/entities/notif'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
 import _ from 'lodash'
+import jurusan from '../../store/jurusan'
 
 export default {
 	name: 'DataPeserat',
+    components: {vSelect},
 	created() {
 		this.changeData()
+        this.getAllGroup()
+        this.allJurusan()
 	},
 	data() {
 		return {
@@ -200,6 +228,8 @@ export default {
 			perPage: 30,
             pageOptions: [30, 80, 160],
 			sekolah: 0,
+            jurusanId: "",
+            groupId: "",
             selected: []
 		}
 	},
@@ -209,6 +239,8 @@ export default {
 		...mapState('peserta', {
 			pesertas: state => state.pesertas,
 		}),
+        ...mapState('grup', ['groups']),
+        ...mapState('jurusan', ['all_jurusan']),
 		page: {
 			get() {
 				return this.$store.state.peserta.page
@@ -227,6 +259,8 @@ export default {
 	methods: {
 		...mapActions('peserta', ['getPesertas','removePeserta', 'removePesertaMultiple']),
         ...mapActions('feature', ['getFeatureInfo']),
+        ...mapActions('grup', ['getAllGroup']),
+        ...mapActions('jurusan', ['allJurusan']),
         onRowSelected(items) {
             this.selected = items
         },
@@ -238,7 +272,7 @@ export default {
         },
 		changeData() {
 			this.getPesertas({
-				search: this.search, perPage: this.perPage
+				search: this.search, perPage: this.perPage, jurusanId: this.jurusanId, groupId: this.groupId
 			})
 		},
         bulkRemove() {
@@ -307,6 +341,12 @@ export default {
 		search:  _.debounce(function (value) {
 			this.changeData()
 		}, 500),
+        jurusanId: _.debounce(function (value) {
+            this.changeData()
+        }, 500),
+        groupId: _.debounce(function (value) {
+            this.changeData()
+        }, 500),
 		perPage() {
             this.changeData()
         }

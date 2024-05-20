@@ -64,14 +64,12 @@ const mutations = {
 }
 
 const actions = {
-    getPesertas({ commit, state }, payload) {
-        let search = typeof payload.search != 'undefined' ? payload.search : ''
-        let perPage = typeof payload.perPage != 'undefined' ? payload.perPage : ''
+    getPesertas({ commit, state }, {search='', perPage='', jurusanId='', groupId=''}) {
         commit('SET_LOADING', true, { root: true })
         
         return new Promise(async ( resolve, reject ) => {
             try {
-                let network = await $axios.get(`pesertas?page=${state.page}&perPage=${perPage}&q=${search}`)
+                let network = await $axios.get(`pesertas?page=${state.page}&perPage=${perPage}&q=${search}&jurusanId=${jurusanId}&groupId=${groupId}`)
 
                 commit('ASSIGN_DATA', network.data.data)
                 commit('SET_LOADING', false, { root: true })
