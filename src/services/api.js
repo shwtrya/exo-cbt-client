@@ -79,10 +79,10 @@ $axios.interceptors.response.use(
     (error) => {
       if (error.response.status == 401) {
         new Promise((resolve, reject) => {
-            delete localStorage.token
+            localStorage.removeItem("token-6zJLlDMQXs")
             resolve()
         }).then(() => {
-            store.state.token = localStorage.getItem('token')
+            store.state.token = localStorage.getItem('token-6zJLlDMQXs')
             router.push({ name: 'login' })
         })
       }
@@ -97,10 +97,10 @@ $gateway.interceptors.response.use(
     (error) => {
       if (error.response.status == 401) {
         new Promise((resolve, reject) => {
-            delete localStorage.token
+            localStorage.removeItem('token-6zJLlDMQXs')
             resolve()
         }).then(() => {
-            store.state.token = localStorage.getItem('token')
+            store.state.token = localStorage.getItem('token-6zJLlDMQXs')
             router.push({ name: 'login' })
         })
       }
@@ -115,10 +115,10 @@ $v3.interceptors.response.use(
     (error) => {
       if (error.response.status == 401) {
         new Promise((resolve, reject) => {
-            delete localStorage.token
+            localStorage.removeItem('token-6zJLlDMQXs')
             resolve()
         }).then(() => {
-            store.state.token = localStorage.getItem('token')
+            store.state.token = localStorage.getItem('token-6zJLlDMQXs')
             router.push({ name: 'login' })
         })
       }

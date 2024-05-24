@@ -47,7 +47,7 @@ export default new Vuex.Store({
     errors: [],
     isLoading: false,
     loadPage: false,
-    token: localStorage.getItem('token'),
+    token: localStorage.getItem('token-6zJLlDMQXs'),
     comingsoon: false
   },
   getters: {

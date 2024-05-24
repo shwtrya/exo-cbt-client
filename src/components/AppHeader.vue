@@ -78,12 +78,12 @@ export default {
         async logout() {
             try {
               await this.loggedOut()
-              localStorage.removeItem('token')
-              this.$store.state.token = localStorage.getItem('token')
+              localStorage.removeItem('token-6zJLlDMQXs')
+              this.$store.state.token = localStorage.getItem('token-6zJLlDMQXs')
               this.$router.push('/login')
             } catch (error) {
-              localStorage.removeItem('token')
-              this.$store.state.token = localStorage.getItem('token')
+              localStorage.removeItem('token-6zJLlDMQXs')
+              this.$store.state.token = localStorage.getItem('token-6zJLlDMQXs')
               this.$router.push('/login')
             }
         },

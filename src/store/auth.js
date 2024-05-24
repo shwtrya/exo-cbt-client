@@ -2,7 +2,7 @@ import $axios from '@/services/api.js'
 
 const actions = {
     submit({ commit }, payload) {
-        localStorage.setItem('token',null)
+        localStorage.setItem('token-6zJLlDMQXs',null)
         commit('SET_TOKEN',null,{ root: true } )
         commit('SET_LOADING', true, { root: true })
 
@@ -11,7 +11,7 @@ const actions = {
                 let network = await $axios.post('login', payload)
 
                 if (network.data.status == 'success') {
-                    localStorage.setItem('token',network.data.token)
+                    localStorage.setItem('token-6zJLlDMQXs',network.data.token)
                     commit('SET_TOKEN',network.data.token, { root: true })
                 }
                 else {
