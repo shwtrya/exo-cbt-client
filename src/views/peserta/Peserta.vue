@@ -156,6 +156,9 @@
                                     <b-button variant="outline-danger" size="sm" @click="bulkRemove">
                                         <i class="flaticon2-trash"></i> Bulk remove
                                     </b-button>
+                                    <b-button variant="outline-danger" size="sm" @click="regeneratePassword">
+                                        <i class="flaticon2-reload"></i> Regenerate password
+                                    </b-button>
                                 </div>
                                 <p><i class="fa fa-bars"></i> <b>{{ pesertas.data.length }}</b> peserta dari <b>{{ pesertas.total }}</b> total data peserta</p>
                             </div>
@@ -257,7 +260,7 @@ export default {
         }
 	},
 	methods: {
-		...mapActions('peserta', ['getPesertas','removePeserta', 'removePesertaMultiple']),
+		...mapActions('peserta', ['getPesertas','removePeserta', 'removePesertaMultiple', 'regeneratePasswordPeserta']),
         ...mapActions('feature', ['getFeatureInfo']),
         ...mapActions('grup', ['getAllGroup']),
         ...mapActions('jurusan', ['allJurusan']),
@@ -302,6 +305,34 @@ export default {
 
                         });
                         this.$bvToast.toast('Data peserta berhasil dihapus.', successToas())
+                    })
+                    .catch((error) => {
+                        this.$bvToast.toast(error.message, errorToas())
+                    })
+                }
+            })
+        },
+        regeneratePassword() {
+            if(this.selected == '') {
+                return
+            }
+            this.$swal({
+                title: 'Informasi',
+                text: 'Peserta yang dipilih akan dilakukan perubahan pada password secara random',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#c7c7c7',
+                confirmButtonText: 'Iya, Lanjutkan!'
+            }).then((result) => {
+                if (result.value) {
+                    let ids = this.selected.map(item => item.id)
+                    this.regeneratePasswordPeserta({ peserta_id: ids })
+                    .then((provider) => {
+                        this.getPesertas({
+
+                        });
+                        this.$bvToast.toast('Data peserta berhasil diubah.', successToas())
                     })
                     .catch((error) => {
                         this.$bvToast.toast(error.message, errorToas())
