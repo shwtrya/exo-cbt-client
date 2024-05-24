@@ -271,6 +271,12 @@ export default {
             this.$refs.selectableTable.clearSelected()
         },
 		changeData() {
+            if (this.jurusanId == null) {
+                this.jurusanId = ""
+            }
+            if (this.groupId == null) {
+                this.groupId = ""
+            }
 			this.getPesertas({
 				search: this.search, perPage: this.perPage, jurusanId: this.jurusanId, groupId: this.groupId
 			})
