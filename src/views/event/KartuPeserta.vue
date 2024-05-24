@@ -10,6 +10,32 @@
                 <button class="btn float-right btn-primary btn-sm mx-1" @click="print"><i class="flaticon2-print"></i> Cetak Kartu Peserta</button>
               </div>
               <br>
+			  <div>
+				<div>
+					<b-form-group
+                              label="Grup"
+                              label-cols-sm="6"
+                              label-cols-md="4"
+                              label-cols-lg="3"
+                              label-align-sm="right"
+                              label-size="sm"
+                              label-for="groupSelect"
+                            >
+                              <v-select label="name" :reduce="group => group.id" :options="groups" v-model="groupId"></v-select>
+                            </b-form-group>
+							<b-form-group
+                              label="Jurusan"
+                              label-cols-sm="6"
+                              label-cols-md="4"
+                              label-cols-lg="3"
+                              label-align-sm="right"
+                              label-size="sm"
+                              label-for="jurusanSelect"
+                            >
+                              <v-select label="nama" :reduce="jurusan => jurusan.id" :options="all_jurusan" v-model="jurusanId"></v-select>
+                            </b-form-group>
+				</div>
+			  </div>
               <input type="text" v-model="event" class="form-control" placeholder="Text tambahan">
             </div>
             <div class="card-footer">
@@ -103,6 +129,30 @@
 			  	<button class="btn float-right btn-primary btn-sm mx-1" @click="print"><i class="flaticon2-print"></i> Cetak Kartu Peserta</button>
 			  </div>
 			  <br>
+			  <div>
+					<b-form-group
+                              label="Grup"
+                              label-cols-sm="6"
+                              label-cols-md="4"
+                              label-cols-lg="3"
+                              label-align-sm="right"
+                              label-size="sm"
+                              label-for="groupSelect"
+                            >
+                              <v-select label="name" :reduce="group => group.id" :options="groups" v-model="groupId"></v-select>
+                            </b-form-group>
+							<b-form-group
+                              label="Jurusan"
+                              label-cols-sm="6"
+                              label-cols-md="4"
+                              label-cols-lg="3"
+                              label-align-sm="right"
+                              label-size="sm"
+                              label-for="jurusanSelect"
+                            >
+                              <v-select label="nama" :reduce="jurusan => jurusan.id" :options="all_jurusan" v-model="jurusanId"></v-select>
+                            </b-form-group>
+				</div>
 			  <input type="text" v-model="event" class="form-control" placeholder="Text tambahan">
 			</div>
 		    <div class="card-footer">
@@ -129,16 +179,24 @@
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
+import vSelect from 'vue-select'
+	import 'vue-select/dist/vue-select.css'
+	import _ from 'lodash'
 export default {
   name: 'KartuPeserat',
+  components: {vSelect},
   created() {
   this.changeData()
   	this.getDataEventUjianSesi(this.$route.params.event_id)
+	  this.getAllGroup()
+		this.allJurusan()
   },
   data() {
   	return {
   	  event: '',
-  	  data_peserta: []
+  	  data_peserta: [],
+	  groupId: "",
+	  jurusanId: ""
   	}
   },
   computed: {
@@ -153,6 +211,8 @@ export default {
   	  sekolahs: state => state.sekolah
   	}),
   	...mapState('event', ['event_jadwal']),
+	  ...mapState('grup', ['groups']),
+		...mapState('jurusan', ['all_jurusan']),
   	page: {
   	  get() {
   	    return this.$store.state.peserta.page
@@ -166,9 +226,22 @@ export default {
   	...mapActions('peserta', ['getPesertas','removePeserta']),
   	...mapActions('sekolah', ['getAllSekolah', ]),
   	...mapActions('event', ['getDataEventUjianSesi']),
+	  ...mapActions('grup', ['getAllGroup']),
+		...mapActions('jurusan', ['allJurusan']),
   	changeData() {
       this.$store.commit('LOADING_PAGE', true)
-  	  this.getPesertas({})
+
+	  if (this.groupId == null) {
+				this.groupId = ""
+			}
+			if (this.jurusanId == null) {
+				this.jurusanId = "s"
+			}
+
+
+  	  this.getPesertas({
+		jurusanId: this.jurusanId, groupId: this.groupId
+	  })
   	  .then((res) => {
         this.$store.commit('LOADING_PAGE', false)
   	    this.data_peserta = this.chunk(this.pesertas.data, 2)
@@ -201,7 +274,13 @@ export default {
   watch: {
 	  page() {
 	    this.changeData()
-	  }
+	  },
+	  jurusanId: _.debounce(function (value) {
+            this.changeData()
+        }, 500),
+        groupId: _.debounce(function (value) {
+            this.changeData()
+        }, 500),
   }
 }
 </script>
